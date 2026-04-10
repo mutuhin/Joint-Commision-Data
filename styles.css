@@ -450,12 +450,35 @@ body {
 /* Scroll reveal text animation */
 .scroll-reveal-text .word {
   display: inline-block;
-  color: var(--muted);
-  transition: color 0.3s ease;
+  color: rgba(92, 86, 76, 0.3);
+  filter: blur(4px);
+  opacity: 0.4;
+  transition: 
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    text-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: filter, opacity, color, text-shadow;
 }
 
 .scroll-reveal-text .word.active {
   color: var(--accent);
+  filter: blur(0);
+  opacity: 1;
+  text-shadow: 
+    0 0 20px rgba(45, 74, 62, 0.4),
+    0 0 40px rgba(45, 74, 62, 0.2),
+    0 0 60px rgba(45, 74, 62, 0.1);
+  transform: scale(1.02);
+}
+
+.scroll-reveal-text .word.past {
+  color: var(--ink);
+  filter: blur(0);
+  opacity: 0.85;
+  text-shadow: none;
+  transform: scale(1);
 }
 
 .hero-lede {

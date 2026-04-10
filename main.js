@@ -324,8 +324,8 @@ document.documentElement.style.scrollBehavior = 'smooth';
 })();
 
 /**
- * Scroll-triggered text reveal animation
- * Words highlight one by one, current word is bright, past words go blurry
+ * Oryzo-style blur-to-clear glow text reveal
+ * Words transition from blurry to clear with glow effect
  */
 (function () {
   const scrollTexts = document.querySelectorAll("[data-scroll-text]");
@@ -340,24 +340,38 @@ document.documentElement.style.scrollBehavior = 'smooth';
   const totalWords = allWords.length;
   if (totalWords === 0) return;
 
+  let currentActiveIndex = -1;
+
   function updateWords() {
     const scrollY = window.scrollY;
-    const triggerStart = 5;
-    const triggerEnd = window.innerHeight * 0.25;
+    const triggerStart = 10;
+    const triggerEnd = window.innerHeight * 0.35;
     
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
-    const activeCount = Math.floor(scrollProgress * totalWords);
+    
+    // Calculate which word should be "active" (current glowing word)
+    const exactProgress = scrollProgress * totalWords;
+    const activeIndex = Math.floor(exactProgress);
+    
+    // Only update if changed
+    if (activeIndex === currentActiveIndex) return;
+    currentActiveIndex = activeIndex;
 
     allWords.forEach((word, index) => {
-      if (index < activeCount) {
+      word.classList.remove("active", "past");
+      
+      if (index < activeIndex) {
+        // Already revealed - clear but no glow
+        word.classList.add("past");
+      } else if (index === activeIndex) {
+        // Current word - glowing
         word.classList.add("active");
-      } else {
-        word.classList.remove("active");
       }
+      // Future words stay blurry (no class)
     });
   }
 
-  // Throttled scroll handler
+  // Smooth scroll handler with RAF
   let ticking = false;
   window.addEventListener("scroll", () => {
     if (!ticking) {
