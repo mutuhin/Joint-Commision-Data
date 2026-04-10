@@ -334,22 +334,43 @@ body {
   display: inline-block;
 }
 
-.blur-letter {
+/* Glass blur effect - bottom-right corner for "t" */
+.blur-letter-br {
   display: inline-block;
   position: relative;
   color: var(--ink);
 }
 
-.blur-letter::after {
+.blur-letter-br::after {
   content: 't';
   position: absolute;
   left: 0;
   top: 0;
   color: var(--ink);
-  filter: blur(2.5px);
-  opacity: 0.4;
-  mask-image: linear-gradient(135deg, transparent 20%, black 100%);
-  -webkit-mask-image: linear-gradient(135deg, transparent 20%, black 100%);
+  filter: blur(2px);
+  opacity: 0.35;
+  mask-image: linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+  -webkit-mask-image: linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none;
+}
+
+/* Glass blur effect - top-left corner for "D" */
+.blur-letter-tl {
+  display: inline-block;
+  position: relative;
+  color: var(--ink);
+}
+
+.blur-letter-tl::after {
+  content: 'D';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--ink);
+  filter: blur(2px);
+  opacity: 0.35;
+  mask-image: linear-gradient(315deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+  -webkit-mask-image: linear-gradient(315deg, transparent 40%, rgba(0,0,0,0.8) 100%);
   pointer-events: none;
 }
 
