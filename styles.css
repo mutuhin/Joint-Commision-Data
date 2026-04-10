@@ -210,10 +210,14 @@ body {
 }
 
 /* Scroll reveal text animation */
+.scroll-reveal-text {
+  position: relative;
+}
+
 .scroll-reveal-text .word {
   display: inline-block;
   color: var(--muted);
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   filter: blur(0);
   padding: 2px 4px;
   margin: 1px 0;
@@ -221,18 +225,17 @@ body {
   background: transparent;
 }
 
-/* Words already read - blurry with faded highlight */
+/* Words already read - with faded highlight */
 .scroll-reveal-text .word.past {
-  color: rgba(92, 86, 76, 0.5);
-  filter: blur(1px);
-  background: rgba(45, 74, 62, 0.08);
+  color: rgba(92, 86, 76, 0.6);
+  background: rgba(45, 74, 62, 0.1);
 }
 
 /* Currently highlighted word - bright green with marker highlight */
 .scroll-reveal-text .word.current {
   color: #0d4025;
   font-weight: 700;
-  background: linear-gradient(120deg, rgba(45, 74, 62, 0.35) 0%, rgba(61, 92, 74, 0.4) 100%);
+  background: linear-gradient(120deg, rgba(45, 74, 62, 0.4) 0%, rgba(61, 92, 74, 0.45) 100%);
   box-shadow: 0 2px 8px rgba(45, 74, 62, 0.3);
   transform: scale(1.08);
 }
@@ -241,7 +244,52 @@ body {
 .scroll-reveal-text .word.active {
   color: var(--accent);
   font-weight: 600;
-  background: rgba(45, 74, 62, 0.15);
+  background: rgba(45, 74, 62, 0.18);
+}
+
+/* All words done - final state with highlight */
+.scroll-reveal-text .word.done {
+  color: #0d4025;
+  font-weight: 600;
+  background: rgba(45, 74, 62, 0.12);
+}
+
+/* Pen line drawing effect when complete */
+.scroll-reveal-text.pen-complete::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, #1a5c3a 50%, var(--accent) 100%);
+  border-radius: 2px;
+  animation: penDraw 0.8s ease-out forwards;
+}
+
+@keyframes penDraw {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* Pen line for hero-sub */
+.hero-sub.scroll-reveal-text.pen-complete::after {
+  bottom: -5px;
+  height: 2px;
+}
+
+/* Pen line for hero-lede */
+.hero-lede.scroll-reveal-text.pen-complete::after {
+  bottom: -10px;
+  height: 3px;
 }
 
 .hero-lede {

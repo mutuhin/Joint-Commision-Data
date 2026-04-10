@@ -173,19 +173,25 @@
 
   function updateWords() {
     const scrollY = window.scrollY;
-    const triggerStart = 10;
-    const triggerEnd = window.innerHeight * 0.55;
+    const triggerStart = 5;
+    const triggerEnd = window.innerHeight * 0.3;
     
-    // Calculate current word index based on scroll - slower progression
+    // Fast progression - complete by middle of hero section
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
-    const currentIndex = Math.floor(scrollProgress * (totalWords + 2));
+    const currentIndex = Math.floor(scrollProgress * (totalWords + 1));
+    
+    // Check if all words are highlighted
+    const allDone = currentIndex >= totalWords;
 
     allWords.forEach((word, index) => {
       // Remove all classes first
-      word.classList.remove("past", "current", "active");
+      word.classList.remove("past", "current", "active", "done");
       
-      if (index < currentIndex - 1) {
-        // Past words - blurry
+      if (allDone) {
+        // All words done - show pen line effect
+        word.classList.add("done");
+      } else if (index < currentIndex - 1) {
+        // Past words
         word.classList.add("past");
       } else if (index === currentIndex - 1 || index === currentIndex) {
         // Current word - bright highlight
@@ -193,6 +199,15 @@
       } else if (index < currentIndex + 3) {
         // Next few words - slightly highlighted
         word.classList.add("active");
+      }
+    });
+    
+    // Add pen line to containers when done
+    scrollTexts.forEach((container) => {
+      if (allDone) {
+        container.classList.add("pen-complete");
+      } else {
+        container.classList.remove("pen-complete");
       }
     });
   }
