@@ -213,36 +213,11 @@ body {
 .scroll-reveal-text .word {
   display: inline-block;
   color: var(--muted);
-  transition: color 0.3s ease, font-weight 0.3s ease;
-  position: relative;
+  transition: color 0.3s ease;
 }
 
-/* Highlighted words - simple green */
 .scroll-reveal-text .word.active {
   color: var(--accent);
-  font-weight: 600;
-}
-
-/* Last word with pen underline */
-.scroll-reveal-text .word.last-word::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 1px;
-  animation: penLine 0.5s ease-out forwards;
-}
-
-@keyframes penLine {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 100%;
-  }
 }
 
 .hero-lede {

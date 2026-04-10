@@ -176,20 +176,14 @@
     const triggerStart = 5;
     const triggerEnd = window.innerHeight * 0.25;
     
-    // Fast progression
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
     const activeCount = Math.floor(scrollProgress * totalWords);
 
     allWords.forEach((word, index) => {
-      word.classList.remove("active", "last-word");
-      
       if (index < activeCount) {
         word.classList.add("active");
-        
-        // Add pen line to the last highlighted word
-        if (index === activeCount - 1) {
-          word.classList.add("last-word");
-        }
+      } else {
+        word.classList.remove("active");
       }
     });
   }
