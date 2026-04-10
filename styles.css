@@ -199,15 +199,28 @@ body {
 .blur-letter {
   display: inline-block;
   position: relative;
-  filter: blur(1.5px);
+  color: transparent;
+}
+
+.blur-letter::before,
+.blur-letter::after {
+  content: 't';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text);
+}
+
+.blur-letter::before {
+  filter: blur(3px);
   opacity: 0.6;
-  transform: translateX(-1px);
-  text-shadow: 
-    0 0 8px rgba(28, 25, 21, 0.15),
-    0 0 20px rgba(45, 74, 62, 0.1);
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  mask-image: linear-gradient(145deg, transparent 30%, black 80%);
+  -webkit-mask-image: linear-gradient(145deg, transparent 30%, black 80%);
+}
+
+.blur-letter::after {
+  mask-image: linear-gradient(145deg, black 40%, transparent 70%);
+  -webkit-mask-image: linear-gradient(145deg, black 40%, transparent 70%);
 }
 
 .hero-sub {
