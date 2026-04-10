@@ -1,4 +1,173 @@
 /**
+ * ORYZO-STYLE ANIMATIONS
+ * Smooth scroll-linked parallax, reveals, and 3D effects
+ */
+
+// Smooth scroll behavior
+document.documentElement.style.scrollBehavior = 'smooth';
+
+/**
+ * Hero Parallax Effect
+ * Elements move at different speeds for depth
+ */
+(function() {
+  const hero = document.querySelector('.hero');
+  const heroTitle = document.querySelector('.hero h1');
+  const heroLede = document.querySelector('.hero-lede');
+  const scrollHint = document.querySelector('.scroll-hint');
+  const floatItems = document.querySelectorAll('.float-item');
+  const badge = document.querySelector('.header__badge');
+  
+  if (!hero) return;
+  
+  let scrollY = 0;
+  let currentY = 0;
+  const ease = 0.08;
+  
+  function lerp(start, end, factor) {
+    return start + (end - start) * factor;
+  }
+  
+  function updateParallax() {
+    currentY = lerp(currentY, scrollY, ease);
+    
+    const progress = Math.min(currentY / window.innerHeight, 1);
+    
+    // Hero title moves up slower (parallax)
+    if (heroTitle) {
+      heroTitle.style.transform = `translateY(${currentY * 0.3}px) scale(${1 - progress * 0.1})`;
+      heroTitle.style.opacity = 1 - progress * 1.5;
+    }
+    
+    // Lede text moves slightly faster
+    if (heroLede) {
+      heroLede.style.transform = `translateY(${currentY * 0.2}px)`;
+    }
+    
+    // Scroll hint fades out quickly
+    if (scrollHint) {
+      scrollHint.style.opacity = 1 - progress * 3;
+      scrollHint.style.transform = `translateY(${currentY * 0.5}px)`;
+    }
+    
+    // Floating items - each at different speed for depth
+    floatItems.forEach((item, i) => {
+      const speed = 0.1 + (i % 5) * 0.08;
+      const rotateSpeed = (i % 2 === 0 ? 1 : -1) * currentY * 0.02;
+      item.style.transform = `translateY(${currentY * speed}px) rotate(${rotateSpeed}deg)`;
+    });
+    
+    // Badge shrinks on scroll
+    if (badge && currentY > 50) {
+      badge.style.transform = `scale(${Math.max(0.8, 1 - currentY * 0.001)})`;
+    }
+    
+    requestAnimationFrame(updateParallax);
+  }
+  
+  window.addEventListener('scroll', () => {
+    scrollY = window.scrollY;
+  }, { passive: true });
+  
+  requestAnimationFrame(updateParallax);
+})();
+
+/**
+ * Scroll Reveal Animations
+ * Elements animate in when entering viewport
+ */
+(function() {
+  const revealElements = document.querySelectorAll('.product-stage, .product-copy, .price, footer');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        // Stagger children if present
+        const children = entry.target.querySelectorAll('.product-copy h2, .product-copy p, .buy-btn');
+        children.forEach((child, i) => {
+          child.style.transitionDelay = `${i * 0.1}s`;
+          child.classList.add('revealed');
+        });
+      }
+    });
+  }, {
+    threshold: 0.2,
+    rootMargin: '0px 0px -10% 0px'
+  });
+  
+  revealElements.forEach(el => {
+    el.classList.add('reveal-ready');
+    observer.observe(el);
+  });
+})();
+
+/**
+ * Magnetic Cursor Effect on Buttons
+ */
+(function() {
+  const buttons = document.querySelectorAll('.buy-btn, .scroll-hint');
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+})();
+
+/**
+ * Smooth Counter Animation for Prices
+ */
+(function() {
+  const priceElements = document.querySelectorAll('[data-price]');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = 'true';
+        const finalValue = parseInt(entry.target.textContent.replace(/[^\d]/g, ''));
+        animateValue(entry.target, 0, finalValue, 1000);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  function animateValue(el, start, end, duration) {
+    const startTime = performance.now();
+    const prefix = el.textContent.includes('৳') ? '৳' : '';
+    
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(start + (end - start) * eased);
+      
+      el.textContent = prefix + toBengaliNumber(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+    
+    requestAnimationFrame(update);
+  }
+  
+  function toBengaliNumber(num) {
+    const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    return num.toString().split('').map(d => bengaliDigits[parseInt(d)] || d).join('');
+  }
+  
+  priceElements.forEach(el => observer.observe(el));
+})();
+
+/**
  * Smooth scroll-linked zoom with frame-based interpolation.
  * Each product zooms in as it enters center, creating a cinematic flow.
  * 3D rotation effect for product images with --3d class.

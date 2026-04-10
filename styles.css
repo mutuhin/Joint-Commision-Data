@@ -20,6 +20,152 @@
   font-family: var(--font-bangla);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   ORYZO-STYLE ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Reveal animations */
+.reveal-ready {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-ready.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children reveals */
+.product-copy h2,
+.product-copy p,
+.buy-btn {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-copy h2.revealed,
+.product-copy p.revealed,
+.buy-btn.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero parallax will-change for performance */
+.hero h1,
+.hero-lede,
+.scroll-hint,
+.float-item {
+  will-change: transform, opacity;
+}
+
+/* Magnetic button effect */
+.buy-btn,
+.scroll-hint {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Smooth 3D product transitions */
+.product-visual img {
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+/* Price counter glow effect when animating */
+[data-price] {
+  transition: text-shadow 0.3s ease;
+}
+
+[data-price][data-animated="true"] {
+  text-shadow: 0 0 30px var(--accent);
+}
+
+/* Entrance animation for header */
+.global-header {
+  animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero entrance sequence */
+.hero h1 {
+  animation: heroReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.hero-lede {
+  animation: heroReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.scroll-hint {
+  animation: heroReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
+}
+
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating items enhanced parallax */
+.float-item {
+  transition: transform 0.1s linear;
+}
+
+/* Product cards hover lift */
+.product-stage:hover .product-visual img {
+  transform: translateZ(30px) scale(1.02) !important;
+}
+
+/* Smooth scroll snap with momentum */
+html {
+  scroll-snap-type: y proximity;
+}
+
+.product-track {
+  scroll-snap-align: start;
+}
+
+/* Loading shimmer for images */
+.product-visual img {
+  background: linear-gradient(
+    90deg,
+    var(--bg) 0%,
+    var(--cream) 50%,
+    var(--bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.product-visual img[src] {
+  animation: none;
+  background: none;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 *,
 *::before,
 *::after {
