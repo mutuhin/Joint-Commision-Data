@@ -199,9 +199,15 @@ body {
 .blur-letter {
   display: inline-block;
   position: relative;
-  filter: blur(1.2px);
-  opacity: 0.5;
-  transform: translateX(-2px);
+  filter: blur(1.5px);
+  opacity: 0.6;
+  transform: translateX(-1px);
+  text-shadow: 
+    0 0 8px rgba(28, 25, 21, 0.15),
+    0 0 20px rgba(45, 74, 62, 0.1);
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .hero-sub {
@@ -305,8 +311,28 @@ body {
   }
 }
 
-.scroll-hint lottie-player {
+.arrow-bounce {
   margin-top: 0.5rem;
+  animation: arrowJump 1.5s ease-in-out infinite;
+}
+
+.arrow-bounce svg {
+  color: var(--accent);
+}
+
+@keyframes arrowJump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(12px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+  70% {
+    transform: translateY(10px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
