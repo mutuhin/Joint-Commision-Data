@@ -173,8 +173,8 @@
 
   function updateWords() {
     const scrollY = window.scrollY;
-    const triggerStart = 30;
-    const triggerEnd = window.innerHeight * 0.7;
+    const triggerStart = 5;
+    const triggerEnd = window.innerHeight * 0.35;
     
     // Calculate current word index based on scroll
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
