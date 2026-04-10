@@ -156,7 +156,7 @@
 
 /**
  * Scroll-triggered text reveal animation
- * Words turn deep green one by one as user scrolls
+ * Words highlight one by one, current word is bright, past words go blurry
  */
 (function () {
   const scrollTexts = document.querySelectorAll("[data-scroll-text]");
@@ -173,18 +173,26 @@
 
   function updateWords() {
     const scrollY = window.scrollY;
-    const triggerStart = 50;
-    const triggerEnd = window.innerHeight * 0.6;
+    const triggerStart = 30;
+    const triggerEnd = window.innerHeight * 0.7;
     
-    // Calculate how many words should be highlighted based on scroll
+    // Calculate current word index based on scroll
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
-    const activeCount = Math.floor(scrollProgress * totalWords);
+    const currentIndex = Math.floor(scrollProgress * (totalWords + 1));
 
     allWords.forEach((word, index) => {
-      if (index < activeCount) {
+      // Remove all classes first
+      word.classList.remove("past", "current", "active");
+      
+      if (index < currentIndex - 1) {
+        // Past words - blurry
+        word.classList.add("past");
+      } else if (index === currentIndex - 1 || index === currentIndex) {
+        // Current word - bright highlight
+        word.classList.add("current");
+      } else if (index < currentIndex + 3) {
+        // Next few words - slightly highlighted
         word.classList.add("active");
-      } else {
-        word.classList.remove("active");
       }
     });
   }

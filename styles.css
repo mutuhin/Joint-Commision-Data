@@ -213,9 +213,25 @@ body {
 .scroll-reveal-text .word {
   display: inline-block;
   color: var(--muted);
-  transition: color 0.4s ease;
+  transition: all 0.4s ease;
+  filter: blur(0);
 }
 
+/* Words already read - blurry */
+.scroll-reveal-text .word.past {
+  color: rgba(92, 86, 76, 0.4);
+  filter: blur(1.5px);
+}
+
+/* Currently highlighted word - bright green */
+.scroll-reveal-text .word.current {
+  color: #1a5c3a;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(45, 74, 62, 0.4);
+  transform: scale(1.05);
+}
+
+/* Active words (highlighted but not current) */
 .scroll-reveal-text .word.active {
   color: var(--accent);
   font-weight: 600;
