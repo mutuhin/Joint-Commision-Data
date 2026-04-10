@@ -213,28 +213,35 @@ body {
 .scroll-reveal-text .word {
   display: inline-block;
   color: var(--muted);
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
   filter: blur(0);
+  padding: 2px 4px;
+  margin: 1px 0;
+  border-radius: 4px;
+  background: transparent;
 }
 
-/* Words already read - blurry */
+/* Words already read - blurry with faded highlight */
 .scroll-reveal-text .word.past {
-  color: rgba(92, 86, 76, 0.4);
-  filter: blur(1.5px);
+  color: rgba(92, 86, 76, 0.5);
+  filter: blur(1px);
+  background: rgba(45, 74, 62, 0.08);
 }
 
-/* Currently highlighted word - bright green */
+/* Currently highlighted word - bright green with marker highlight */
 .scroll-reveal-text .word.current {
-  color: #1a5c3a;
+  color: #0d4025;
   font-weight: 700;
-  text-shadow: 0 0 20px rgba(45, 74, 62, 0.4);
-  transform: scale(1.05);
+  background: linear-gradient(120deg, rgba(45, 74, 62, 0.35) 0%, rgba(61, 92, 74, 0.4) 100%);
+  box-shadow: 0 2px 8px rgba(45, 74, 62, 0.3);
+  transform: scale(1.08);
 }
 
 /* Active words (highlighted but not current) */
 .scroll-reveal-text .word.active {
   color: var(--accent);
   font-weight: 600;
+  background: rgba(45, 74, 62, 0.15);
 }
 
 .hero-lede {

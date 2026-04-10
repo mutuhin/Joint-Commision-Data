@@ -173,12 +173,12 @@
 
   function updateWords() {
     const scrollY = window.scrollY;
-    const triggerStart = 5;
-    const triggerEnd = window.innerHeight * 0.35;
+    const triggerStart = 10;
+    const triggerEnd = window.innerHeight * 0.55;
     
-    // Calculate current word index based on scroll
+    // Calculate current word index based on scroll - slower progression
     const scrollProgress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
-    const currentIndex = Math.floor(scrollProgress * (totalWords + 1));
+    const currentIndex = Math.floor(scrollProgress * (totalWords + 2));
 
     allWords.forEach((word, index) => {
       // Remove all classes first
