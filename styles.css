@@ -318,6 +318,9 @@ body {
 
 .arrow-bounce svg {
   color: var(--accent);
+  width: 40px;
+  height: 40px;
+  display: block;
 }
 
 @keyframes arrowJump {
