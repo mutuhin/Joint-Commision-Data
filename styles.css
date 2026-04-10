@@ -334,82 +334,100 @@ body {
   display: inline-block;
 }
 
-/* Cinematic glass blur effect - bottom-right corner for "t" */
+/* Cinematic dissolve blur - bottom-right for "t" (like Oryzo) */
 .blur-letter-br {
   display: inline-block;
   position: relative;
+  color: var(--ink);
+  mask-image: linear-gradient(
+    135deg,
+    black 0%,
+    black 30%,
+    rgba(0,0,0,0.6) 50%,
+    rgba(0,0,0,0.2) 70%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    135deg,
+    black 0%,
+    black 30%,
+    rgba(0,0,0,0.6) 50%,
+    rgba(0,0,0,0.2) 70%,
+    transparent 100%
+  );
 }
 
-.blur-letter-br::before,
 .blur-letter-br::after {
   content: 't';
   position: absolute;
   left: 0;
   top: 0;
+  color: var(--ink);
+  filter: blur(8px);
+  opacity: 0.5;
+  mask-image: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 20%,
+    black 60%,
+    black 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 20%,
+    black 60%,
+    black 100%
+  );
   pointer-events: none;
 }
 
-/* Frosted glass layer */
-.blur-letter-br::before {
-  color: rgba(28, 25, 21, 0.3);
-  filter: blur(3px);
-  clip-path: polygon(40% 40%, 100% 40%, 100% 100%, 40% 100%);
-}
-
-/* Glass shine/reflection layer */
-.blur-letter-br::after {
-  background: linear-gradient(
-    135deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.15) 45%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.15) 55%,
-    transparent 70%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  clip-path: polygon(40% 40%, 100% 40%, 100% 100%, 40% 100%);
-  mix-blend-mode: overlay;
-}
-
-/* Cinematic glass blur effect - top-left corner for "D" */
+/* Cinematic dissolve blur - top-left for "D" (like Oryzo) */
 .blur-letter-tl {
   display: inline-block;
   position: relative;
+  color: var(--ink);
+  mask-image: linear-gradient(
+    315deg,
+    black 0%,
+    black 30%,
+    rgba(0,0,0,0.6) 50%,
+    rgba(0,0,0,0.2) 70%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    315deg,
+    black 0%,
+    black 30%,
+    rgba(0,0,0,0.6) 50%,
+    rgba(0,0,0,0.2) 70%,
+    transparent 100%
+  );
 }
 
-.blur-letter-tl::before,
 .blur-letter-tl::after {
   content: 'D';
   position: absolute;
   left: 0;
   top: 0;
-  pointer-events: none;
-}
-
-/* Frosted glass layer */
-.blur-letter-tl::before {
-  color: rgba(28, 25, 21, 0.3);
-  filter: blur(3px);
-  clip-path: polygon(0 0, 60% 0, 60% 60%, 0 60%);
-}
-
-/* Glass shine/reflection layer */
-.blur-letter-tl::after {
-  background: linear-gradient(
+  color: var(--ink);
+  filter: blur(8px);
+  opacity: 0.5;
+  mask-image: linear-gradient(
     315deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.15) 45%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.15) 55%,
-    transparent 70%
+    transparent 0%,
+    transparent 20%,
+    black 60%,
+    black 100%
   );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  clip-path: polygon(0 0, 60% 0, 60% 60%, 0 60%);
-  mix-blend-mode: overlay;
+  -webkit-mask-image: linear-gradient(
+    315deg,
+    transparent 0%,
+    transparent 20%,
+    black 60%,
+    black 100%
+  );
+  pointer-events: none;
 }
 
 .hero-sub {
