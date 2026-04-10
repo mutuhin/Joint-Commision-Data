@@ -76,14 +76,6 @@
   will-change: transform;
 }
 
-/* Price counter glow effect when animating */
-[data-price] {
-  transition: text-shadow 0.3s ease;
-}
-
-[data-price][data-animated="true"] {
-  text-shadow: 0 0 30px var(--accent);
-}
 
 /* Entrance animation for header */
 .global-header {
@@ -345,28 +337,20 @@ body {
 .blur-letter {
   display: inline-block;
   position: relative;
-  color: transparent;
+  color: var(--ink);
 }
 
-.blur-letter::before,
 .blur-letter::after {
   content: 't';
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--text);
-}
-
-.blur-letter::before {
-  filter: blur(3px);
-  opacity: 0.6;
-  mask-image: linear-gradient(145deg, transparent 30%, black 80%);
-  -webkit-mask-image: linear-gradient(145deg, transparent 30%, black 80%);
-}
-
-.blur-letter::after {
-  mask-image: linear-gradient(145deg, black 40%, transparent 70%);
-  -webkit-mask-image: linear-gradient(145deg, black 40%, transparent 70%);
+  color: var(--ink);
+  filter: blur(2.5px);
+  opacity: 0.4;
+  mask-image: linear-gradient(135deg, transparent 20%, black 100%);
+  -webkit-mask-image: linear-gradient(135deg, transparent 20%, black 100%);
+  pointer-events: none;
 }
 
 .hero-sub {
