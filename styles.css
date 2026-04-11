@@ -336,100 +336,59 @@ body {
   display: inline-block;
 }
 
-/* Cinematic dissolve blur - bottom-right for "t" (like Oryzo) */
-.blur-letter-br {
-  display: inline-block;
-  position: relative;
-  color: var(--ink);
-  mask-image: linear-gradient(
-    135deg,
-    black 0%,
-    black 30%,
-    rgba(0,0,0,0.6) 50%,
-    rgba(0,0,0,0.2) 70%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    135deg,
-    black 0%,
-    black 30%,
-    rgba(0,0,0,0.6) 50%,
-    rgba(0,0,0,0.2) 70%,
-    transparent 100%
-  );
-}
-
-.blur-letter-br::after {
-  content: 't';
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--ink);
-  filter: blur(8px);
-  opacity: 0.5;
-  mask-image: linear-gradient(
-    135deg,
-    transparent 0%,
-    transparent 20%,
-    black 60%,
-    black 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    135deg,
-    transparent 0%,
-    transparent 20%,
-    black 60%,
-    black 100%
-  );
-  pointer-events: none;
-}
-
-/* Cinematic dissolve blur - top-left for "D" (like Oryzo) */
+/* D / t: soft corner fade only — no blur layer (avoids dark halo on bg) */
+.blur-letter-br,
 .blur-letter-tl {
   display: inline-block;
   position: relative;
   color: var(--ink);
+  text-shadow: none;
+  filter: none;
+}
+
+.blur-letter-br {
   mask-image: linear-gradient(
-    315deg,
-    black 0%,
-    black 30%,
-    rgba(0,0,0,0.6) 50%,
-    rgba(0,0,0,0.2) 70%,
+    135deg,
+    #000 0%,
+    #000 35%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.35) 78%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
-    315deg,
-    black 0%,
-    black 30%,
-    rgba(0,0,0,0.6) 50%,
-    rgba(0,0,0,0.2) 70%,
+    135deg,
+    #000 0%,
+    #000 35%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.35) 78%,
     transparent 100%
   );
 }
 
-.blur-letter-tl::after {
-  content: 'D';
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--ink);
-  filter: blur(8px);
-  opacity: 0.5;
+.blur-letter-tl {
   mask-image: linear-gradient(
     315deg,
-    transparent 0%,
-    transparent 20%,
-    black 60%,
-    black 100%
+    #000 0%,
+    #000 35%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.35) 78%,
+    transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     315deg,
-    transparent 0%,
-    transparent 20%,
-    black 60%,
-    black 100%
+    #000 0%,
+    #000 35%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.35) 78%,
+    transparent 100%
   );
-  pointer-events: none;
+}
+
+/* Pure green highlight — always, overrides scroll states */
+.scroll-reveal-text .word.word--accent-green,
+.scroll-reveal-text .word.word--accent-green.active,
+.scroll-reveal-text .word.word--accent-green.past {
+  color: #15803d !important;
 }
 
 .hero-sub {
@@ -996,12 +955,6 @@ body {
     color: var(--ink);
     filter: none !important;
     opacity: 1 !important;
-  }
-
-  /* Mobile: Disable dissolving letter effects */
-  .blur-letter-br::after,
-  .blur-letter-tl::after {
-    display: none;
   }
 
   /* Mobile: Disable reveal animations that hide content */
