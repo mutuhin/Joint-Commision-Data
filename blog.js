@@ -22,6 +22,35 @@
     });
   }
 
+  /** Wrap plain-text clauses ending in ? or ？ in <strong class="blog-q"> */
+  function wrapQuestionSentencesInPlainText(text) {
+    const parts = text.split(/(\?|？)/);
+    if (parts.length === 1) return esc(text);
+    let out = "";
+    for (let i = 0; i < parts.length; i++) {
+      const chunk = parts[i];
+      const mark = parts[i + 1];
+      if (mark === "?" || mark === "？") {
+        out += `<strong class="blog-q">${esc(chunk)}${mark}</strong>`;
+        i++;
+      } else {
+        out += esc(chunk);
+      }
+    }
+    return out;
+  }
+
+  function enhanceQuestionSentences(bodyEl) {
+    if (!bodyEl) return;
+    const blocks = bodyEl.querySelectorAll("p, li");
+    blocks.forEach((el) => {
+      if (el.children.length > 0) return;
+      const text = el.textContent;
+      if (!text || !/[?？]/.test(text)) return;
+      el.innerHTML = wrapQuestionSentencesInPlainText(text);
+    });
+  }
+
   function renderList(posts) {
     if (!posts.length) {
       root.innerHTML =
@@ -71,6 +100,8 @@
         <div class="blog-article__body">${post.body || ""}</div>
       </article>
     `;
+    const bodyEl = root.querySelector(".blog-article__body");
+    enhanceQuestionSentences(bodyEl);
   }
 
   fetch("data/blog-posts.json")
