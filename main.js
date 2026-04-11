@@ -23,9 +23,12 @@ document.documentElement.style.scrollBehavior = 'smooth';
   
   const isMobile = window.innerWidth <= 768;
   
+  // Skip parallax entirely on mobile to avoid visibility issues
+  if (isMobile) return;
+  
   let scrollY = 0;
   let currentY = 0;
-  const ease = isMobile ? 0.12 : 0.08;
+  const ease = 0.08;
   
   function lerp(start, end, factor) {
     return start + (end - start) * factor;
@@ -36,38 +39,29 @@ document.documentElement.style.scrollBehavior = 'smooth';
     
     const progress = Math.min(currentY / window.innerHeight, 1);
     
-    // Reduce parallax intensity on mobile
-    const parallaxMultiplier = isMobile ? 0.3 : 1;
-    
     // Hero title moves up slower (parallax)
     if (heroTitle) {
-      const translateY = currentY * 0.3 * parallaxMultiplier;
-      const scale = 1 - progress * 0.1 * parallaxMultiplier;
-      heroTitle.style.transform = `translateY(${translateY}px) scale(${scale})`;
+      heroTitle.style.transform = `translateY(${currentY * 0.3}px) scale(${1 - progress * 0.1})`;
       heroTitle.style.opacity = Math.max(0, 1 - progress * 1.5);
     }
     
     // Lede text moves slightly faster
     if (heroLede) {
-      const translateY = currentY * 0.2 * parallaxMultiplier;
-      heroLede.style.transform = `translateY(${translateY}px)`;
+      heroLede.style.transform = `translateY(${currentY * 0.2}px)`;
     }
     
     // Scroll hint fades out quickly
     if (scrollHint) {
       scrollHint.style.opacity = Math.max(0, 1 - progress * 3);
-      const translateY = currentY * 0.5 * parallaxMultiplier;
-      scrollHint.style.transform = `translateY(${translateY}px)`;
+      scrollHint.style.transform = `translateY(${currentY * 0.5}px)`;
     }
     
-    // Floating items - each at different speed for depth (skip on mobile for perf)
-    if (!isMobile) {
-      floatItems.forEach((item, i) => {
-        const speed = 0.1 + (i % 5) * 0.08;
-        const rotateSpeed = (i % 2 === 0 ? 1 : -1) * currentY * 0.02;
-        item.style.transform = `translateY(${currentY * speed}px) rotate(${rotateSpeed}deg)`;
-      });
-    }
+    // Floating items - each at different speed for depth
+    floatItems.forEach((item, i) => {
+      const speed = 0.1 + (i % 5) * 0.08;
+      const rotateSpeed = (i % 2 === 0 ? 1 : -1) * currentY * 0.02;
+      item.style.transform = `translateY(${currentY * speed}px) rotate(${rotateSpeed}deg)`;
+    });
     
     // Badge shrinks on scroll
     if (badge && currentY > 50) {
@@ -87,8 +81,14 @@ document.documentElement.style.scrollBehavior = 'smooth';
 /**
  * Scroll Reveal Animations
  * Elements animate in when entering viewport
+ * Disabled on mobile for better compatibility
  */
 (function() {
+  const isMobile = window.innerWidth <= 768;
+  
+  // Skip reveal animations on mobile - everything visible by default
+  if (isMobile) return;
+  
   const revealElements = document.querySelectorAll('.product-stage, .product-copy, .price, footer');
   
   const observer = new IntersectionObserver((entries) => {
