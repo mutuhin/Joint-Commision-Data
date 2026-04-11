@@ -854,8 +854,10 @@ body {
     margin-bottom: 0.75rem;
   }
 
+  /* Mobile: Normal scroll layout - NO sticky, NO tall tracks */
   .product-track {
-    height: 180vh;
+    height: auto !important;
+    min-height: auto !important;
   }
 
   .product-track--alt .product-stage {
@@ -863,12 +865,14 @@ body {
   }
 
   .product-stage {
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
     flex-direction: column;
     text-align: center;
-    padding: 5rem 1rem 2rem;
-    gap: 1rem;
+    padding: 3rem 1rem;
+    gap: 1.5rem;
     justify-content: flex-start;
-    padding-top: 15vh;
   }
 
   .product-visual {
@@ -941,11 +945,11 @@ body {
 
 @media (max-width: 400px) {
   .product-track {
-    height: 160vh;
+    height: auto !important;
   }
 
   .product-stage {
-    padding-top: 12vh;
+    padding: 2rem 1rem;
   }
 
   .product-visual {
