@@ -5,6 +5,8 @@
 
   const statusEl = $("load-status");
   const msgEl = $("admin-msg");
+  const afterEl = $("after-generate");
+  const jsonOutEl = $("json-output");
 
   function showMsg(text, type) {
     if (!text) {
@@ -136,6 +138,12 @@
 
     const out = { posts: [newPost, ...posts] };
     const json = JSON.stringify(out, null, 2);
+
+    posts = out.posts;
+    jsonOutEl.value = json;
+    afterEl.hidden = false;
+    afterEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
     const blob = new Blob([json], { type: "application/json;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -144,9 +152,25 @@
     URL.revokeObjectURL(a.href);
 
     showMsg(
-      "ডাউনলোড শেষ। এখন এই ফাইল দিয়ে রিপোতে data/blog-posts.json রিপ্লেস করুন, তারপর git push করুন।",
+      "ডাউনলোড হয়েছে। উপরের ধাপ অনুসারে কপি করে GitHub-ে কমিট করুন — অথবা আবার ফর্ম পূরণ করে আরেকটি পোস্ট যোগ করতে পারবেন।",
       "ok"
     );
+  });
+
+  $("btn-copy-json").addEventListener("click", async () => {
+    const text = jsonOutEl.value;
+    if (!text) {
+      showMsg("আগে ফর্ম থেকে JSON তৈরি করুন।", "error");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showMsg("ক্লিপবোর্ডে কপি হয়েছে। এখন GitHub লিংকে গিয়ে পেস্ট করুন।", "ok");
+    } catch {
+      jsonOutEl.focus();
+      jsonOutEl.select();
+      showMsg("অটো কপি হয়নি — টেক্সটবক্স সিলেক্ট করে ম্যানুয়াল কপি করুন (Cmd/Ctrl+C)।", "ok");
+    }
   });
 
   setDefaults();

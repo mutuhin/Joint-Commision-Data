@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Outfit:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="admin.css?v=1" />
+    <link rel="stylesheet" href="admin.css?v=2" />
   </head>
   <body class="admin-page">
     <div class="admin-top">
@@ -24,10 +24,11 @@
 
     <div class="admin-wrap">
       <p class="admin-note bangla">
-        ফর্ম পূরণ করুন → <strong>JSON ডাউনলোড</strong> → রিপোতে
-        <code>data/blog-posts.json</code> ফাইলটি <strong>এই ফাইল দিয়ে রিপ্লেস</strong> করুন →
-        <code>git push</code> করলেই সাইটে দেখা যাবে। সরাসরি সার্ভারে আপলোড হয় না; শুধু আপনার
-        GitHub পুশ দরকার।
+        <strong>৩ ধাপ:</strong> (১) ফর্ম পূরণ করে <strong>JSON ডাউনলোড</strong> করুন। (২) নিচের বক্সে
+        <strong>কপি</strong> চাপুন অথবা ডাউনলোড করা ফাইল খুলুন। (৩)
+        <strong>GitHub-এ এডিট</strong> লিংকে গিয়ে সব টেক্সট বদলে <strong>Commit changes</strong> করুন।
+        (লোকাল কম্পিউটারে কাজ করলে:
+        <code>./scripts/apply-blog-json.sh ~/Downloads/blog-posts.json</code> তারপর git push)
       </p>
 
       <div class="admin-load">
@@ -65,7 +66,7 @@
         </label>
 
         <div class="admin-actions">
-          <button type="button" class="btn-primary" id="btn-download">JSON ডাউনলোড করুন</button>
+          <button type="button" class="btn-primary" id="btn-download">তৈরি করুন ও ডাউনলোড</button>
           <button
             type="button"
             class="btn-secondary"
@@ -76,9 +77,30 @@
         </div>
       </form>
 
+      <div id="after-generate" class="admin-after" hidden>
+        <h2 class="admin-after__title bangla">পরবর্তী ধাপ — GitHub-এ বসান</h2>
+        <p class="admin-after__hint bangla">
+          নিচের টেক্সটবক্সে পুরো JSON আছে। <strong>কপি</strong> চাপুন, তারপর GitHub লিংকে গিয়ে সব
+          মুছে এই JSON পেস্ট করুন → <em>Commit changes</em>।
+        </p>
+        <div class="admin-after__actions">
+          <button type="button" class="btn-primary" id="btn-copy-json">JSON ক্লিপবোর্ডে কপি</button>
+          <a
+            class="btn-github"
+            id="link-github-edit"
+            href="https://github.com/mutuhin/Joint-Commision-Data/edit/main/data/blog-posts.json"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub-এ ফাইল খুলুন →</a
+          >
+        </div>
+        <label class="admin-after__label" for="json-output">পুরো blog-posts.json</label>
+        <textarea id="json-output" class="admin-json-out" readonly rows="14" spellcheck="false"></textarea>
+      </div>
+
       <div id="admin-msg" class="admin-msg" role="status"></div>
     </div>
 
-    <script src="admin.js?v=1"></script>
+    <script src="admin.js?v=2"></script>
   </body>
 </html>
