@@ -137,8 +137,14 @@ document.documentElement.style.scrollBehavior = 'smooth';
 
 /**
  * Smooth Counter Animation for Prices
+ * DISABLED on mobile to prevent display issues
  */
 (function() {
+  const isMobile = window.innerWidth <= 768;
+  
+  // Skip price animation on mobile
+  if (isMobile) return;
+  
   const priceElements = document.querySelectorAll('[data-price]');
   
   const observer = new IntersectionObserver((entries) => {

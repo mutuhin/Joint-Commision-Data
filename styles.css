@@ -1045,11 +1045,37 @@ body {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
+    display: block !important;
+  }
+
+  .product-stage {
+    display: flex !important;
+  }
+
+  .product-visual {
+    display: block !important;
+    width: 70vw !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
   }
 
   .product-visual img {
     opacity: 1 !important;
     transform: none !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .product-copy {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .product-copy h2,
+  .product-copy p {
+    display: block !important;
+    opacity: 1 !important;
   }
 }
 
