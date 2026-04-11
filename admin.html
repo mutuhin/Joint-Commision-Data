@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>নতুন ব্লগ পোস্ট — Dried Depot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Outfit:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.css?v=1" />
+  </head>
+  <body class="admin-page">
+    <div class="admin-top">
+      <span class="admin-badge">Blog writer</span>
+      <div>
+        <a href="index.html">Home</a>
+        ·
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+
+    <div class="admin-wrap">
+      <p class="admin-note bangla">
+        ফর্ম পূরণ করুন → <strong>JSON ডাউনলোড</strong> → রিপোতে
+        <code>data/blog-posts.json</code> ফাইলটি <strong>এই ফাইল দিয়ে রিপ্লেস</strong> করুন →
+        <code>git push</code> করলেই সাইটে দেখা যাবে। সরাসরি সার্ভারে আপলোড হয় না; শুধু আপনার
+        GitHub পুশ দরকার।
+      </p>
+
+      <div class="admin-load">
+        <label for="file-existing">বর্তমান blog-posts.json (যদি অটো লোড না হয়)</label>
+        <input type="file" id="file-existing" accept=".json,application/json" />
+        <p id="load-status" class="admin-status bangla">লোড হচ্ছে…</p>
+      </div>
+
+      <form class="admin-form" id="admin-form" onsubmit="return false;">
+        <label for="field-slug">Slug (URL) — ইংরেজি, ছোট হাত, হাইফেন</label>
+        <input type="text" id="field-slug" placeholder="যেমন: winter-smoothie-tips" autocomplete="off" />
+        <p class="hint bangla">খালি রাখলে শিরোনাম থেকে ইংরেজি অংশ বানানোর চেষ্টা হবে; বাংলা শিরোনাম হলে slug হাতে লিখুন।</p>
+
+        <label for="field-title">শিরোনাম</label>
+        <input type="text" id="field-title" placeholder="পোস্টের শিরোনাম" />
+
+        <label for="field-date">তারিখ</label>
+        <input type="date" id="field-date" />
+
+        <label for="field-read">পড়তে মিনিট (ঐচ্ছিক)</label>
+        <input type="number" id="field-read" min="1" max="120" placeholder="4" />
+
+        <label for="field-excerpt">ছোট ভূমিকা (লিস্টে দেখাবে)</label>
+        <textarea id="field-excerpt" placeholder="১–২ লাইন"></textarea>
+
+        <label for="field-body">মূল লেখা</label>
+        <textarea
+          id="field-body"
+          placeholder="HTML: &lt;p&gt;...&lt;/p&gt; অথবা নিচের চেকবক্সে সাদা লেখা মোড"
+        ></textarea>
+
+        <label class="admin-check">
+          <input type="checkbox" id="plain-mode" checked />
+          <span class="bangla">সাদা লেখা — খালি লাইন দিয়ে অনুচ্ছেদ আলাদা (HTML লাগবে না)</span>
+        </label>
+
+        <div class="admin-actions">
+          <button type="button" class="btn-primary" id="btn-download">JSON ডাউনলোড করুন</button>
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="document.getElementById('admin-form').reset(); document.getElementById('plain-mode').checked=true; location.reload()"
+          >
+            রিসেট
+          </button>
+        </div>
+      </form>
+
+      <div id="admin-msg" class="admin-msg" role="status"></div>
+    </div>
+
+    <script src="admin.js?v=1"></script>
+  </body>
+</html>

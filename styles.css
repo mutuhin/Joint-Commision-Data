@@ -301,6 +301,11 @@ body {
   border-color: rgba(255, 255, 255, 0.7);
 }
 
+.nav-blog--quiet {
+  opacity: 0.92;
+  letter-spacing: 0.18em;
+}
+
 .logo {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;

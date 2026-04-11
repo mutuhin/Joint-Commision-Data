@@ -1,0 +1,211 @@
+/* Simple admin — matches blog dark tone */
+:root {
+  --a-bg: #0a0a0b;
+  --a-fg: #f4f2ed;
+  --a-muted: #8a8680;
+  --a-line: rgba(244, 242, 237, 0.12);
+  --a-accent: #e8a54b;
+  --a-green: #2d4a3e;
+  --a-font-bn: "Noto Sans Bengali", system-ui, sans-serif;
+}
+
+body.admin-page {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--a-bg);
+  color: var(--a-fg);
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 1.5rem clamp(1rem, 4vw, 2rem) 4rem;
+}
+
+.admin-top {
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-top a {
+  color: var(--a-accent);
+  text-decoration: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-top a:hover {
+  text-decoration: underline;
+}
+
+.admin-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+}
+
+.admin-wrap {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.admin-note {
+  font-family: var(--a-font-bn);
+  font-size: 0.9rem;
+  color: var(--a-muted);
+  border: 1px solid var(--a-line);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+}
+
+.admin-note code {
+  font-size: 0.8rem;
+  color: var(--a-fg);
+}
+
+.admin-load {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border: 1px dashed var(--a-line);
+  border-radius: 12px;
+}
+
+.admin-load label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+  margin-bottom: 0.75rem;
+}
+
+.admin-status {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--a-accent);
+  font-family: var(--a-font-bn);
+}
+
+.admin-form label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+  margin: 1.25rem 0 0.4rem;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form input[type="date"],
+.admin-form textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--a-line);
+  border-radius: 10px;
+  background: #141416;
+  color: var(--a-fg);
+  font-family: var(--a-font-bn);
+  font-size: 1rem;
+}
+
+.admin-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.admin-form textarea#field-body {
+  min-height: 220px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}
+
+.admin-form .hint {
+  font-size: 0.8rem;
+  color: var(--a-muted);
+  margin-top: 0.35rem;
+  font-family: var(--a-font-bn);
+}
+
+.admin-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.admin-actions button {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.admin-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-actions .btn-primary {
+  background: var(--a-green);
+  color: #fff;
+}
+
+.admin-actions .btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.admin-actions .btn-secondary {
+  background: transparent;
+  color: var(--a-fg);
+  border: 1px solid var(--a-line);
+}
+
+.admin-msg {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border-radius: 10px;
+  font-family: var(--a-font-bn);
+  font-size: 0.9rem;
+  display: none;
+}
+
+.admin-msg.is-error {
+  display: block;
+  background: rgba(180, 50, 50, 0.15);
+  border: 1px solid rgba(180, 50, 50, 0.4);
+}
+
+.admin-msg.is-ok {
+  display: block;
+  background: rgba(45, 74, 62, 0.35);
+  border: 1px solid var(--a-green);
+}
+
+.admin-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-family: var(--a-font-bn);
+  font-size: 0.9rem;
+  color: var(--a-muted);
+}
+
+.admin-check input {
+  accent-color: var(--a-accent);
+}
