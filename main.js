@@ -9,6 +9,7 @@ document.documentElement.style.scrollBehavior = 'smooth';
 /**
  * Hero Parallax Effect
  * Elements move at different speeds for depth
+ * Reduced on mobile for better performance
  */
 (function() {
   const hero = document.querySelector('.hero');
@@ -20,9 +21,11 @@ document.documentElement.style.scrollBehavior = 'smooth';
   
   if (!hero) return;
   
+  const isMobile = window.innerWidth <= 768;
+  
   let scrollY = 0;
   let currentY = 0;
-  const ease = 0.08;
+  const ease = isMobile ? 0.12 : 0.08;
   
   function lerp(start, end, factor) {
     return start + (end - start) * factor;
@@ -33,29 +36,38 @@ document.documentElement.style.scrollBehavior = 'smooth';
     
     const progress = Math.min(currentY / window.innerHeight, 1);
     
+    // Reduce parallax intensity on mobile
+    const parallaxMultiplier = isMobile ? 0.3 : 1;
+    
     // Hero title moves up slower (parallax)
     if (heroTitle) {
-      heroTitle.style.transform = `translateY(${currentY * 0.3}px) scale(${1 - progress * 0.1})`;
-      heroTitle.style.opacity = 1 - progress * 1.5;
+      const translateY = currentY * 0.3 * parallaxMultiplier;
+      const scale = 1 - progress * 0.1 * parallaxMultiplier;
+      heroTitle.style.transform = `translateY(${translateY}px) scale(${scale})`;
+      heroTitle.style.opacity = Math.max(0, 1 - progress * 1.5);
     }
     
     // Lede text moves slightly faster
     if (heroLede) {
-      heroLede.style.transform = `translateY(${currentY * 0.2}px)`;
+      const translateY = currentY * 0.2 * parallaxMultiplier;
+      heroLede.style.transform = `translateY(${translateY}px)`;
     }
     
     // Scroll hint fades out quickly
     if (scrollHint) {
-      scrollHint.style.opacity = 1 - progress * 3;
-      scrollHint.style.transform = `translateY(${currentY * 0.5}px)`;
+      scrollHint.style.opacity = Math.max(0, 1 - progress * 3);
+      const translateY = currentY * 0.5 * parallaxMultiplier;
+      scrollHint.style.transform = `translateY(${translateY}px)`;
     }
     
-    // Floating items - each at different speed for depth
-    floatItems.forEach((item, i) => {
-      const speed = 0.1 + (i % 5) * 0.08;
-      const rotateSpeed = (i % 2 === 0 ? 1 : -1) * currentY * 0.02;
-      item.style.transform = `translateY(${currentY * speed}px) rotate(${rotateSpeed}deg)`;
-    });
+    // Floating items - each at different speed for depth (skip on mobile for perf)
+    if (!isMobile) {
+      floatItems.forEach((item, i) => {
+        const speed = 0.1 + (i % 5) * 0.08;
+        const rotateSpeed = (i % 2 === 0 ? 1 : -1) * currentY * 0.02;
+        item.style.transform = `translateY(${currentY * speed}px) rotate(${rotateSpeed}deg)`;
+      });
+    }
     
     // Badge shrinks on scroll
     if (badge && currentY > 50) {

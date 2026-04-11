@@ -792,6 +792,59 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Hero section mobile fixes */
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 2rem 1rem;
+  }
+
+  .hero-inner {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 10vw, 3rem);
+    line-height: 1.2;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .hero-sub.bangla {
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  .hero-lede.bangla {
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    line-height: 1.7;
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .scroll-hint {
+    margin-top: 1.5rem;
+  }
+
+  .scroll-hint .bangla {
+    font-size: 1.2rem;
+  }
+
+  .arrow-bounce svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Eyebrow mobile */
+  .eyebrow {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
   .product-track {
     height: 180vh;
   }
@@ -909,6 +962,64 @@ body {
 
   .hero-lede.bangla {
     font-size: 0.95rem;
+  }
+
+  /* Mobile: Fix scroll reveal text */
+  .scroll-reveal-text .word {
+    filter: blur(2px);
+    opacity: 0.5;
+  }
+
+  .scroll-reveal-text .word.active {
+    filter: blur(0);
+    opacity: 1;
+    text-shadow: 
+      0 0 15px rgba(45, 74, 62, 0.3),
+      0 0 30px rgba(45, 74, 62, 0.15);
+    transform: scale(1.01);
+  }
+
+  .scroll-reveal-text .word.past {
+    filter: blur(0);
+    opacity: 0.85;
+  }
+
+  /* Mobile: Reduce blur on dissolving letters */
+  .blur-letter-br::after,
+  .blur-letter-tl::after {
+    filter: blur(5px);
+    opacity: 0.4;
+  }
+
+  /* Mobile: Fix hero entrance animations */
+  .hero h1 {
+    animation: heroRevealMobile 1s ease-out 0.2s both;
+  }
+
+  .hero-lede {
+    animation: heroRevealMobile 1s ease-out 0.4s both;
+  }
+
+  .scroll-hint {
+    animation: heroRevealMobile 1s ease-out 0.5s both;
+  }
+
+  @keyframes heroRevealMobile {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile: Disable parallax transforms that might cause issues */
+  .hero h1,
+  .hero-lede,
+  .scroll-hint {
+    will-change: auto;
   }
 }
 
