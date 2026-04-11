@@ -183,12 +183,15 @@ document.documentElement.style.scrollBehavior = 'smooth';
  * Smooth scroll-linked zoom with frame-based interpolation.
  * Each product zooms in as it enters center, creating a cinematic flow.
  * 3D rotation effect for product images with --3d class.
+ * DISABLED on mobile to prevent visibility issues.
  */
 (function () {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const tracks = document.querySelectorAll(".product-track");
+  const isMobile = window.innerWidth <= 768;
 
-  if (!tracks.length || reducedMotion) return;
+  // Skip all scroll animations on mobile - products stay fully visible
+  if (!tracks.length || reducedMotion || isMobile) return;
 
   // Store current animated values for smooth lerp
   const state = new Map();
@@ -206,13 +209,10 @@ document.documentElement.style.scrollBehavior = 'smooth';
       translateZ: -60,
     });
   });
-
-  // Detect mobile
-  const isMobile = window.innerWidth <= 768;
   
-  // Smooth lerp factor — lower = smoother but laggier, higher = snappier
-  const LERP_FACTOR = isMobile ? 0.12 : 0.08;
-  const LERP_FACTOR_3D = isMobile ? 0.1 : 0.06;
+  // Smooth lerp factor (desktop only)
+  const LERP_FACTOR = 0.08;
+  const LERP_FACTOR_3D = 0.06;
 
   function lerp(current, target, factor) {
     return current + (target - current) * factor;
@@ -227,24 +227,18 @@ document.documentElement.style.scrollBehavior = 'smooth';
     const bell = Math.sin(progress * Math.PI);
     
     // 3D rotation: starts tilted, flattens at center, tilts opposite on exit
-    // progress: 0 = entry, 0.5 = center, 1 = exit
     const tiltPhase = (progress - 0.5) * 2; // -1 to 1
     
-    // Reduce intensity on mobile
-    const rotateMultiplier = isMobile ? 0.5 : 1;
-    const scaleRange = isMobile ? 0.15 : 0.26;
-    
     return {
-      imgScale: 0.88 + scaleRange * bell,
+      imgScale: 0.88 + 0.26 * bell,
       copyScale: 0.96 + 0.04 * bell,
-      copyY: (isMobile ? 15 : 28) - (isMobile ? 15 : 28) * bell,
+      copyY: 28 - 28 * bell,
       copyOpacity: 0.65 + 0.35 * bell,
-      priceScale: 0.85 + (isMobile ? 0.2 : 0.37) * bell,
-      // 3D: reduced on mobile
-      rotateX: tiltPhase * 15 * rotateMultiplier,
-      rotateY: -tiltPhase * 12 * rotateMultiplier,
-      rotateZ: tiltPhase * 3 * rotateMultiplier,
-      translateZ: (-Math.abs(tiltPhase) * 80 + bell * 40) * rotateMultiplier,
+      priceScale: 0.85 + 0.37 * bell,
+      rotateX: tiltPhase * 15,
+      rotateY: -tiltPhase * 12,
+      rotateZ: tiltPhase * 3,
+      translateZ: -Math.abs(tiltPhase) * 80 + bell * 40,
     };
   }
 

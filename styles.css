@@ -1019,13 +1019,24 @@ body {
     will-change: auto;
   }
 
-  /* Mobile: Ensure products are visible */
+  /* Mobile: Force all products visible - override JS animations */
   .product-stage,
   .product-visual,
   .product-copy,
-  .price {
+  .price,
+  .product-track,
+  .product-name,
+  .product-tag,
+  .product-note,
+  .buy-btn {
     opacity: 1 !important;
     visibility: visible !important;
+    transform: none !important;
+  }
+
+  .product-visual img {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
