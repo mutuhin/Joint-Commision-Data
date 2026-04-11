@@ -384,11 +384,15 @@ body {
   );
 }
 
-/* Pure green highlight — always, overrides scroll states */
+/* Pure green highlight — larger size, overrides scroll states */
 .scroll-reveal-text .word.word--accent-green,
 .scroll-reveal-text .word.word--accent-green.active,
 .scroll-reveal-text .word.word--accent-green.past {
   color: #15803d !important;
+  font-size: clamp(1.25rem, 4.2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  vertical-align: baseline;
 }
 
 .hero-sub {
