@@ -57,12 +57,16 @@
         <label for="field-body">মূল লেখা</label>
         <textarea
           id="field-body"
-          placeholder="HTML: &lt;p&gt;...&lt;/p&gt; অথবা নিচের চেকবক্সে সাদা লেখা মোড"
+          placeholder="সাদা লেখা: খালি লাইন = নতুন অনুচ্ছেদ। শিরোনাম লাইনের শুরুতে ## (যেমন ## টমেটো পাউডারের উপকারিতা)"
         ></textarea>
 
         <label class="admin-check">
           <input type="checkbox" id="plain-mode" checked />
-          <span class="bangla">সাদা লেখা — খালি লাইন দিয়ে অনুচ্ছেদ আলাদা (HTML লাগবে না)</span>
+          <span class="bangla"
+            >সাদা লেখা — খালি লাইন দিয়ে অনুচ্ছেদ আলাদা। শিরোনাম:
+            <code>## আপনার শিরোনাম</code> অথবা ছোট এক লাইন (১০০ অক্ষরের কম, । দিয়ে শেষ নয়) স্বয়ংক্রিয়
+            বড় ও বোল্ড হবে।</span
+          >
         </label>
 
         <div class="admin-actions">
@@ -101,6 +105,6 @@
       <div id="admin-msg" class="admin-msg" role="status"></div>
     </div>
 
-    <script src="admin.js?v=2"></script>
+    <script src="admin.js?v=3"></script>
   </body>
 </html>

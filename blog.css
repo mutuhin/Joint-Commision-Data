@@ -283,6 +283,23 @@
   display: inline;
 }
 
+/* Section titles — auto from short <p> or use ## in admin / <h3 class="blog-section-heading"> */
+.blog-article__body .blog-section-heading {
+  font-family: var(--blog-font-bangla);
+  font-size: clamp(1.2rem, 3.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 2rem 0 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--blog-line);
+  color: var(--blog-fg);
+  letter-spacing: -0.02em;
+}
+
+.blog-article__body > .blog-section-heading:first-of-type {
+  margin-top: 0.5rem;
+}
+
 .blog-footer {
   border-top: 1px solid var(--blog-line);
   padding: 2rem clamp(1.25rem, 4vw, 2rem);

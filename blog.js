@@ -42,12 +42,32 @@
 
   function enhanceQuestionSentences(bodyEl) {
     if (!bodyEl) return;
-    const blocks = bodyEl.querySelectorAll("p, li");
+    const blocks = bodyEl.querySelectorAll("p, li, h3.blog-section-heading");
     blocks.forEach((el) => {
       if (el.children.length > 0) return;
       const text = el.textContent;
       if (!text || !/[?？]/.test(text)) return;
       el.innerHTML = wrapQuestionSentencesInPlainText(text);
+    });
+  }
+
+  /**
+   * Short single-line paragraphs → section headings (e.g. "টমেটো পাউডারের উপকারিতা",
+   * "কেন … ব্যবহার করবেন?", "সংরক্ষণ টিপস"). Skips lead, multi-line, and full sentences ending । / .
+   */
+  function promoteSectionHeadings(bodyEl) {
+    if (!bodyEl) return;
+    bodyEl.querySelectorAll("p:not(.blog-lead)").forEach((p) => {
+      if (p.children.length > 0) return;
+      if (/<br\s*\/?>/i.test(p.innerHTML)) return;
+      const t = p.textContent.trim();
+      if (t.length < 2 || t.length > 120) return;
+      if (/[!！]\s*$/u.test(t)) return;
+      if (/[।.。]\s*$/u.test(t) && !/[?？]\s*$/u.test(t)) return;
+      const h = document.createElement("h3");
+      h.className = "blog-section-heading";
+      h.textContent = t;
+      p.replaceWith(h);
     });
   }
 
@@ -101,6 +121,7 @@
       </article>
     `;
     const bodyEl = root.querySelector(".blog-article__body");
+    promoteSectionHeadings(bodyEl);
     enhanceQuestionSentences(bodyEl);
   }
 

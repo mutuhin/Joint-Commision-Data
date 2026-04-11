@@ -29,6 +29,12 @@
       .replace(/^-+|-+$/g, "");
   }
 
+  function escapeHtml(s) {
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
   function plainToHtml(text) {
     const chunks = text
       .split(/\n\s*\n/)
@@ -36,8 +42,25 @@
       .filter(Boolean);
     if (!chunks.length) return "";
     return chunks
-      .map((p, i) => {
-        const inner = p.replace(/\n/g, "<br>");
+      .map((chunk, i) => {
+        const trimmed = chunk.trim();
+        const firstLine = trimmed.split(/\r?\n/)[0];
+        if (/^##\s+/.test(firstLine)) {
+          const afterHash = trimmed.replace(/^##\s+/, "").trim();
+          const lines = afterHash.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+          if (!lines.length) return "";
+          const title = escapeHtml(lines[0]);
+          const more = lines.slice(1);
+          let html = `<h3 class="blog-section-heading">${title}</h3>`;
+          if (more.length) {
+            html += `<p>${more.map((l) => escapeHtml(l)).join("<br>")}</p>`;
+          }
+          return html;
+        }
+        const inner = trimmed
+          .split(/\r?\n/)
+          .map((line) => escapeHtml(line))
+          .join("<br>");
         return i === 0
           ? `<p class="blog-lead">${inner}</p>`
           : `<p>${inner}</p>`;
