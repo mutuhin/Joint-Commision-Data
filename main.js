@@ -144,7 +144,8 @@ document.documentElement.style.scrollBehavior = 'smooth';
 (function () {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const priceElements = document.querySelectorAll("[data-price]");
+  // Must not use [data-price] alone — articles also have data-price and would get wiped by setPriceDisplay.
+  const priceElements = document.querySelectorAll(".product-track p.price[data-price]");
 
   function toBengaliNumber(num) {
     const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
