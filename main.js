@@ -139,53 +139,83 @@ document.documentElement.style.scrollBehavior = 'smooth';
 })();
 
 /**
- * Smooth Counter Animation for Prices
- * DISABLED on mobile to prevent display issues
+ * Price count-up when visible — repeats every time you scroll away and back
  */
-(function() {
-  const isMobile = window.innerWidth <= 768;
-  
-  // Skip price animation on mobile
-  if (isMobile) return;
-  
-  const priceElements = document.querySelectorAll('[data-price]');
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !entry.target.dataset.animated) {
-        entry.target.dataset.animated = 'true';
-        const finalValue = parseInt(entry.target.textContent.replace(/[^\d]/g, ''));
-        animateValue(entry.target, 0, finalValue, 1000);
-      }
-    });
-  }, { threshold: 0.5 });
-  
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const priceElements = document.querySelectorAll("[data-price]");
+
+  function toBengaliNumber(num) {
+    const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return num
+      .toString()
+      .split("")
+      .map((d) => bengaliDigits[parseInt(d, 10)] || d)
+      .join("");
+  }
+
+  function getEndValue(el) {
+    const track = el.closest(".product-track");
+    const raw = track?.getAttribute("data-price");
+    if (raw != null && raw !== "") {
+      const n = parseInt(raw, 10);
+      if (Number.isFinite(n)) return n;
+    }
+    const digits = el.textContent.replace(/[^\d]/g, "");
+    return parseInt(digits, 10) || 0;
+  }
+
+  function setPriceDisplay(el, value) {
+    el.innerHTML = `<span class="currency">৳</span>${toBengaliNumber(value)}`;
+  }
+
   function animateValue(el, start, end, duration) {
+    if (el._priceRaf) {
+      cancelAnimationFrame(el._priceRaf);
+      el._priceRaf = null;
+    }
     const startTime = performance.now();
-    const prefix = el.textContent.includes('৳') ? '৳' : '';
-    
+
     function update(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 4);
       const current = Math.floor(start + (end - start) * eased);
-      
-      el.textContent = prefix + toBengaliNumber(current);
-      
+      setPriceDisplay(el, current);
       if (progress < 1) {
-        requestAnimationFrame(update);
+        el._priceRaf = requestAnimationFrame(update);
+      } else {
+        el._priceRaf = null;
+        setPriceDisplay(el, end);
       }
     }
-    
-    requestAnimationFrame(update);
+    el._priceRaf = requestAnimationFrame(update);
   }
-  
-  function toBengaliNumber(num) {
-    const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-    return num.toString().split('').map(d => bengaliDigits[parseInt(d)] || d).join('');
-  }
-  
-  priceElements.forEach(el => observer.observe(el));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const el = entry.target;
+        const end = getEndValue(el);
+        if (!Number.isFinite(end) || end < 0) return;
+
+        if (entry.isIntersecting) {
+          el._priceHasBeenVisible = true;
+          animateValue(el, 0, end, 1000);
+        } else {
+          if (el._priceRaf) {
+            cancelAnimationFrame(el._priceRaf);
+            el._priceRaf = null;
+          }
+          if (el._priceHasBeenVisible) setPriceDisplay(el, 0);
+        }
+      });
+    },
+    { threshold: 0.35, rootMargin: "0px" }
+  );
+
+  priceElements.forEach((el) => observer.observe(el));
 })();
 
 /**
