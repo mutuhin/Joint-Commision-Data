@@ -797,6 +797,52 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Smooth scroll on phone: disable snap (janky on iOS/Android) */
+  html {
+    scroll-snap-type: none !important;
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.75rem;
+  }
+
+  .hero,
+  .product-track,
+  .site-footer {
+    scroll-snap-align: none;
+  }
+
+  /* Fixed header: no mix-blend (was inverting over products / mismatch) */
+  .site-header {
+    mix-blend-mode: normal;
+    background: rgba(255, 253, 248, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--ink);
+    border-bottom: 1px solid rgba(28, 25, 21, 0.08);
+    box-shadow: 0 4px 24px rgba(28, 25, 21, 0.06);
+  }
+
+  .site-header .logo {
+    color: var(--ink);
+  }
+
+  .nav-blog {
+    color: var(--ink);
+    border-color: rgba(45, 74, 62, 0.35);
+  }
+
+  .nav-blog:hover,
+  .nav-blog:active {
+    background: rgba(45, 74, 62, 0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .badge,
+  .badge.bangla {
+    color: var(--ink);
+    border-color: rgba(45, 74, 62, 0.35);
+  }
+
   /* Hero section mobile fixes */
   .hero {
     min-height: 100vh;

@@ -115,9 +115,12 @@ document.documentElement.style.scrollBehavior = 'smooth';
 })();
 
 /**
- * Magnetic Cursor Effect on Buttons
+ * Magnetic Cursor Effect on Buttons (pointer devices only — avoids touch offset)
  */
 (function() {
+  if (window.matchMedia("(max-width: 768px)").matches) return;
+  if (!window.matchMedia("(pointer: fine)").matches) return;
+
   const buttons = document.querySelectorAll('.buy-btn, .scroll-hint');
   
   buttons.forEach(btn => {
