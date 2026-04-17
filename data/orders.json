@@ -1,0 +1,28 @@
+{
+  "orders": [
+    {
+      "id": "DRD-20260418-6738",
+      "tranId": "DRD-20260418-6738-1776458536940",
+      "product": "বিটরুট গুড়া",
+      "quantity": 1,
+      "unitPrice": 350,
+      "weight": "100 গ্রাম",
+      "subtotal": 350,
+      "deliveryCharge": 100,
+      "total": 450,
+      "customer": {
+        "name": "kcs",
+        "phone": "01791636363",
+        "address": "dsvsv"
+      },
+      "payment": {
+        "method": "sslcommerz",
+        "transactionId": null,
+        "status": "pending",
+        "paidAt": null
+      },
+      "status": "pending",
+      "orderDate": "2026-04-17T20:42:16.940Z"
+    }
+  ]
+}

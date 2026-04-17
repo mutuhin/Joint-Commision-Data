@@ -581,41 +581,52 @@ document.documentElement.style.scrollBehavior = 'smooth';
     updatePrices();
   });
   
-  // Form submission
-  orderForm?.addEventListener("submit", (e) => {
+  // Form submission — sends order to backend, redirects to SSLCommerz
+  orderForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
-    const customerName = document.getElementById("customerName").value;
-    const customerPhone = document.getElementById("customerPhone").value;
-    const customerAddress = document.getElementById("customerAddress").value;
+
+    const btn = orderForm.querySelector("button[type=submit]");
     const qty = parseInt(qtyInput.value) || 1;
     const productTotal = currentProduct.price * qty;
     const total = productTotal + DELIVERY_CHARGE;
-    
-    // Create order data (you can send this to a server)
-    const orderData = {
-      product: currentProduct.name,
-      quantity: qty,
-      unitPrice: currentProduct.price,
-      weight: currentProduct.weight,
-      subtotal: productTotal,
-      deliveryCharge: DELIVERY_CHARGE,
-      total: total,
-      customer: {
-        name: customerName,
-        phone: customerPhone,
-        address: customerAddress
-      },
-      orderDate: new Date().toISOString()
-    };
-    
-    // Log order (replace with actual API call)
-    console.log("Order placed:", orderData);
-    
-    // Reset form
-    orderForm.reset();
-    
-    // Show success
-    showSuccess();
+
+    btn.disabled = true;
+    btn.textContent = "অনুগ্রহ করে অপেক্ষা করুন…";
+
+    try {
+      const res = await fetch("/api/order/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product: currentProduct.name,
+          quantity: qty,
+          unitPrice: currentProduct.price,
+          weight: currentProduct.weight,
+          subtotal: productTotal,
+          deliveryCharge: DELIVERY_CHARGE,
+          total,
+          customer: {
+            name: document.getElementById("customerName").value.trim(),
+            phone: document.getElementById("customerPhone").value.trim(),
+            address: document.getElementById("customerAddress").value.trim()
+          }
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.gatewayUrl) {
+        orderForm.reset();
+        window.location.href = data.gatewayUrl;
+      } else {
+        btn.disabled = false;
+        btn.textContent = "পেমেন্টে যান →";
+        alert(data.error || "পেমেন্ট শুরু করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = "পেমেন্টে যান →";
+      alert("সার্ভার সংযোগে সমস্যা। আবার চেষ্টা করুন।");
+    }
   });
 })();

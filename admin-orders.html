@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders Dashboard — Dried Depot Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #0a0a0b;
+      --bg2:     #111113;
+      --bg3:     #18181b;
+      --fg:      #f4f2ed;
+      --muted:   #8a8680;
+      --line:    rgba(244,242,237,0.10);
+      --accent:  #e8a54b;
+      --green:   #2d4a3e;
+      --green-l: #4caf82;
+      --red:     #c0392b;
+      --red-l:   #e05a4b;
+      --blue-l:  #60a5fa;
+      --font-bn: "Noto Sans Bengali", system-ui, sans-serif;
+      --font:    "Outfit", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 14px; min-height: 100vh; }
+
+    /* ── login ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .login-card {
+      background: var(--bg2);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+    .login-card h1 {
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem;
+    }
+    .login-card p { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.45rem;
+    }
+    .form-group input {
+      width: 100%; padding: 0.75rem 1rem;
+      background: var(--bg3); border: 1px solid var(--line);
+      border-radius: 10px; color: var(--fg);
+      font-family: var(--font); font-size: 0.95rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--accent); }
+    #loginError { color: var(--red-l); font-size: 0.82rem; margin-bottom: 1rem; min-height: 1.2rem; font-family: var(--font-bn); }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.8rem 1.4rem; border-radius: 10px; border: none; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.15s; }
+    .btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-primary { background: var(--green); color: #fff; width: 100%; justify-content: center; }
+    .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.72rem; }
+    .btn-outline { background: transparent; border: 1px solid var(--line); color: var(--fg); }
+
+    /* ── dashboard ── */
+    #dashboard { display: none; }
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      padding: 1.25rem clamp(1rem, 4vw, 2.5rem);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg2);
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 1rem; }
+    .site-badge { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .top-bar h1 { font-size: 1rem; font-weight: 700; }
+    .top-bar-right { display: flex; gap: 0.75rem; align-items: center; }
+    .top-bar a { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+    .top-bar a:hover { text-decoration: underline; }
+
+    .main { padding: clamp(1.5rem, 4vw, 2.5rem); max-width: 1200px; margin: 0 auto; }
+
+    /* ── stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+    .stat-label { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; line-height: 1; }
+    .stat-value.green { color: var(--green-l); }
+    .stat-value.amber { color: var(--accent); }
+    .stat-value.blue  { color: var(--blue-l); }
+
+    /* ── filter tabs ── */
+    .filter-row {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--line); padding-bottom: 1rem;
+    }
+    .filter-tab {
+      font-family: var(--font); font-size: 0.73rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.5rem 1rem; border-radius: 8px;
+      background: transparent; border: 1px solid var(--line);
+      color: var(--muted); cursor: pointer; transition: all 0.18s;
+    }
+    .filter-tab:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-tab.active { background: var(--accent); border-color: var(--accent); color: #0a0a0b; }
+
+    /* ── table ── */
+    .table-wrap {
+      background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .table-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    #searchInput {
+      background: var(--bg3); border: 1px solid var(--line); border-radius: 8px;
+      color: var(--fg); font-family: var(--font); font-size: 0.82rem;
+      padding: 0.45rem 0.85rem; outline: none; width: 220px; transition: border-color 0.2s;
+    }
+    #searchInput:focus { border-color: var(--accent); }
+    #searchInput::placeholder { color: var(--muted); }
+
+    .scroll-x { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--bg3); }
+    th {
+      padding: 0.75rem 1rem; text-align: left;
+      font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      white-space: nowrap;
+    }
+    td {
+      padding: 0.9rem 1rem; border-top: 1px solid var(--line);
+      font-size: 0.83rem; vertical-align: middle;
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .empty-row td { text-align: center; padding: 3rem; color: var(--muted); font-family: var(--font-bn); }
+
+    .order-id-cell { font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--accent); }
+    .customer-name { font-weight: 600; }
+    .customer-phone { color: var(--muted); font-size: 0.75rem; }
+    .product-cell { max-width: 160px; }
+    .product-name { font-weight: 500; }
+    .product-qty { color: var(--muted); font-size: 0.75rem; }
+    .total-cell { font-weight: 700; }
+
+    /* badges */
+    .badge {
+      display: inline-flex; align-items: center;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.25rem 0.6rem; border-radius: 6px; white-space: nowrap;
+    }
+    .badge-paid    { background: rgba(76,175,130,0.15); color: var(--green-l); border: 1px solid rgba(76,175,130,0.3); }
+    .badge-pending { background: rgba(232,165,75,0.12); color: var(--accent);  border: 1px solid rgba(232,165,75,0.25); }
+    .badge-failed  { background: rgba(192,57,43,0.12);  color: var(--red-l);   border: 1px solid rgba(192,57,43,0.25); }
+    .badge-cancelled { background: rgba(100,100,100,0.12); color: #777; border: 1px solid rgba(100,100,100,0.2); }
+
+    /* status dropdown in table */
+    .status-select {
+      background: var(--bg3); border: 1px solid var(--line); border-radius: 7px;
+      color: var(--fg); font-family: var(--font); font-size: 0.75rem;
+      padding: 0.35rem 0.65rem; cursor: pointer; outline: none;
+    }
+    .status-select:focus { border-color: var(--accent); }
+
+    .action-btn {
+      background: transparent; border: 1px solid var(--line); border-radius: 7px;
+      color: var(--muted); font-size: 0.72rem; font-family: var(--font);
+      padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.18s;
+    }
+    .action-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── detail modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem; z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg2); border: 1px solid var(--line); border-radius: 18px;
+      padding: 2rem; width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      transform: translateY(12px); transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .modal-title { font-size: 1rem; font-weight: 700; }
+    .modal-order-id { font-family: ui-monospace, monospace; font-size: 0.72rem; color: var(--accent); margin-top: 0.25rem; }
+    .close-btn {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.4rem; cursor: pointer; line-height: 1; padding: 0;
+    }
+    .close-btn:hover { color: var(--fg); }
+    .detail-section { margin-bottom: 1.5rem; }
+    .detail-section h3 {
+      font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem; border-bottom: 1px solid var(--line);
+    }
+    .detail-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 0.45rem 0; font-size: 0.84rem; gap: 1rem;
+    }
+    .detail-row .key { color: var(--muted); flex-shrink: 0; }
+    .detail-row .val { text-align: right; font-weight: 500; word-break: break-word; }
+    .detail-total { font-size: 1rem; font-weight: 700; color: var(--accent); }
+    .modal-footer { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); align-items: center; }
+    .status-update-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    #modalStatusSelect {
+      background: var(--bg3); border: 1px solid var(--line); border-radius: 8px;
+      color: var(--fg); font-family: var(--font); font-size: 0.85rem;
+      padding: 0.5rem 0.9rem; outline: none; flex: 1;
+    }
+    #modalStatusSelect:focus { border-color: var(--accent); }
+    #updateStatusBtn { white-space: nowrap; }
+
+    /* loading spinner */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid var(--line); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(10,10,11,0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; display: none;
+    }
+    .loading-overlay.show { display: flex; }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      th, td { padding: 0.65rem 0.75rem; }
+      #searchInput { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login Screen ────────────────────────────────── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>Admin Login</h1>
+    <p>Order dashboard — Dried Depot</p>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
+      </div>
+      <div id="loginError"></div>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── Dashboard ──────────────────────────────────── -->
+<div id="dashboard">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="site-badge">Admin</span>
+      <h1>Orders Dashboard</h1>
+    </div>
+    <div class="top-bar-right">
+      <a href="admin.html">Blog</a>
+      <a href="index.html">Site</a>
+      <button class="btn btn-sm btn-outline" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Paid</div>
+        <div class="stat-value green" id="statPaid">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue (৳)</div>
+        <div class="stat-value amber" id="statRevenue">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Payment</div>
+        <div class="stat-value blue" id="statPending">—</div>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-row" id="filterRow">
+      <button class="filter-tab active" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="filter-tab" data-filter="pending"    onclick="setFilter('pending', this)">Pending</button>
+      <button class="filter-tab" data-filter="processing" onclick="setFilter('processing', this)">Processing</button>
+      <button class="filter-tab" data-filter="shipped"    onclick="setFilter('shipped', this)">Shipped</button>
+      <button class="filter-tab" data-filter="delivered"  onclick="setFilter('delivered', this)">Delivered</button>
+      <button class="filter-tab" data-filter="cancelled"  onclick="setFilter('cancelled', this)">Cancelled</button>
+    </div>
+
+    <!-- Orders table -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">Orders</span>
+        <input type="search" id="searchInput" placeholder="Search name, phone, order ID…" oninput="renderTable()" />
+      </div>
+      <div class="scroll-x">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Order Detail Modal ─────────────────────────── -->
+<div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-top">
+      <div>
+        <div class="modal-title">Order Detail</div>
+        <div class="modal-order-id" id="modalOrderId"></div>
+      </div>
+      <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+    </div>
+
+    <div class="detail-section">
+      <h3>Customer</h3>
+      <div class="detail-row"><span class="key">Name</span><span class="val" id="dCusName"></span></div>
+      <div class="detail-row"><span class="key">Phone</span><span class="val" id="dCusPhone"></span></div>
+      <div class="detail-row"><span class="key">Address</span><span class="val" id="dCusAddr"></span></div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Order</h3>
+      <div class="detail-row"><span class="key">Product</span><span class="val" id="dProduct"></span></div>
+      <div class="detail-row"><span class="key">Weight</span><span class="val" id="dWeight"></span></div>
+      <div class="detail-row"><span class="key">Quantity</span><span class="val" id="dQty"></span></div>
+      <div class="detail-row"><span class="key">Unit Price</span><span class="val" id="dUnitPrice"></span></div>
+      <div class="detail-row"><span class="key">Subtotal</span><span class="val" id="dSubtotal"></span></div>
+      <div class="detail-row"><span class="key">Delivery</span><span class="val" id="dDelivery"></span></div>
+      <div class="detail-row"><span class="key">Total</span><span class="val detail-total" id="dTotal"></span></div>
+      <div class="detail-row"><span class="key">Date</span><span class="val" id="dDate"></span></div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Payment</h3>
+      <div class="detail-row"><span class="key">Method</span><span class="val" id="dPayMethod"></span></div>
+      <div class="detail-row"><span class="key">Status</span><span class="val" id="dPayStatus"></span></div>
+      <div class="detail-row"><span class="key">Transaction ID</span><span class="val" id="dPayTxn"></span></div>
+      <div class="detail-row"><span class="key">Paid At</span><span class="val" id="dPayAt"></span></div>
+    </div>
+
+    <div class="modal-footer">
+      <span class="status-update-label">Update Status:</span>
+      <select id="modalStatusSelect">
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <button class="btn btn-primary btn-sm" id="updateStatusBtn" onclick="updateOrderStatus()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
+</div>
+
+<script>
+  const TOKEN_KEY = 'dd_admin_token';
+  let allOrders = [];
+  let activeFilter = 'all';
+  let selectedOrderId = null;
+
+  // ── auth ──────────────────────────────────────────────────────────────────
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    const pw  = document.getElementById('passwordInput').value;
+    const err = document.getElementById('loginError');
+    err.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+      const res  = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+      if (res.ok && data.token) {
+        sessionStorage.setItem(TOKEN_KEY, data.token);
+        showDashboard();
+      } else {
+        err.textContent = 'পাসওয়ার্ড সঠিক নয়।';
+        btn.disabled = false;
+        btn.textContent = 'Login';
+      }
+    } catch {
+      err.textContent = 'সার্ভার সংযোগে সমস্যা।';
+      btn.disabled = false;
+      btn.textContent = 'Login';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem(TOKEN_KEY);
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+
+  function getToken() { return sessionStorage.getItem(TOKEN_KEY); }
+
+  // ── dashboard ─────────────────────────────────────────────────────────────
+
+  async function showDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    await loadOrders();
+  }
+
+  async function loadOrders() {
+    showLoading(true);
+    try {
+      const res  = await fetch('/api/admin/orders', {
+        headers: { 'x-admin-token': getToken() }
+      });
+      if (res.status === 401) { logout(); return; }
+      const data = await res.json();
+      allOrders  = data.orders || [];
+      updateStats();
+      renderTable();
+    } catch {
+      alert('অর্ডার লোড করতে সমস্যা।');
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  function updateStats() {
+    const paid    = allOrders.filter(o => o.payment?.status === 'paid');
+    const revenue = paid.reduce((s, o) => s + (o.total || 0), 0);
+    const pending = allOrders.filter(o => o.payment?.status === 'pending');
+    document.getElementById('statTotal').textContent   = allOrders.length;
+    document.getElementById('statPaid').textContent    = paid.length;
+    document.getElementById('statRevenue').textContent = revenue.toLocaleString('bn-BD');
+    document.getElementById('statPending').textContent = pending.length;
+  }
+
+  function setFilter(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderTable();
+  }
+
+  function renderTable() {
+    const q   = (document.getElementById('searchInput').value || '').toLowerCase();
+    let rows  = allOrders;
+
+    if (activeFilter !== 'all') {
+      rows = rows.filter(o => o.status === activeFilter);
+    }
+    if (q) {
+      rows = rows.filter(o =>
+        o.id?.toLowerCase().includes(q) ||
+        o.customer?.name?.toLowerCase().includes(q) ||
+        o.customer?.phone?.toLowerCase().includes(q)
+      );
+    }
+
+    const tbody = document.getElementById('ordersBody');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">কোনো অর্ডার পাওয়া যায়নি।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rows.map(o => `
+      <tr>
+        <td class="order-id-cell">${o.id}</td>
+        <td style="white-space:nowrap;color:var(--muted);">${fmtDate(o.orderDate)}</td>
+        <td>
+          <div class="customer-name">${esc(o.customer?.name || '—')}</div>
+          <div class="customer-phone">${esc(o.customer?.phone || '')}</div>
+        </td>
+        <td class="product-cell">
+          <div class="product-name">${esc(o.product || '—')}</div>
+          <div class="product-qty">×${o.quantity || 1} · ${esc(o.weight || '')}</div>
+        </td>
+        <td class="total-cell">৳${(o.total || 0).toLocaleString('en-BD')}</td>
+        <td>${payBadge(o.payment?.status)}</td>
+        <td>
+          <select class="status-select" data-id="${o.id}" onchange="quickUpdate(this)">
+            ${statusOptions(o.status)}
+          </select>
+        </td>
+        <td><button class="action-btn" onclick="openDetail('${o.id}')">বিস্তারিত</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function statusOptions(current) {
+    return ['pending','processing','shipped','delivered','cancelled'].map(s =>
+      `<option value="${s}" ${current === s ? 'selected' : ''}>${cap(s)}</option>`
+    ).join('');
+  }
+
+  async function quickUpdate(sel) {
+    const id     = sel.dataset.id;
+    const status = sel.value;
+    const res    = await fetch(`/api/admin/orders/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() },
+      body: JSON.stringify({ status })
+    });
+    if (!res.ok) { alert('আপডেট ব্যর্থ।'); await loadOrders(); return; }
+    const idx = allOrders.findIndex(o => o.id === id);
+    if (idx > -1) { allOrders[idx].status = status; updateStats(); }
+  }
+
+  // ── detail modal ──────────────────────────────────────────────────────────
+
+  function openDetail(id) {
+    const o = allOrders.find(o => o.id === id);
+    if (!o) return;
+    selectedOrderId = id;
+
+    document.getElementById('modalOrderId').textContent   = o.id;
+    document.getElementById('dCusName').textContent       = o.customer?.name  || '—';
+    document.getElementById('dCusPhone').textContent      = o.customer?.phone || '—';
+    document.getElementById('dCusAddr').textContent       = o.customer?.address || '—';
+    document.getElementById('dProduct').textContent       = o.product   || '—';
+    document.getElementById('dWeight').textContent        = o.weight    || '—';
+    document.getElementById('dQty').textContent           = o.quantity  || 1;
+    document.getElementById('dUnitPrice').textContent     = '৳' + (o.unitPrice || 0).toLocaleString('en-BD');
+    document.getElementById('dSubtotal').textContent      = '৳' + (o.subtotal  || 0).toLocaleString('en-BD');
+    document.getElementById('dDelivery').textContent      = '৳' + (o.deliveryCharge || 0).toLocaleString('en-BD');
+    document.getElementById('dTotal').textContent         = '৳' + (o.total     || 0).toLocaleString('en-BD');
+    document.getElementById('dDate').textContent          = fmtDateFull(o.orderDate);
+    document.getElementById('dPayMethod').textContent     = 'SSLCommerz';
+    document.getElementById('dPayStatus').innerHTML       = payBadge(o.payment?.status);
+    document.getElementById('dPayTxn').textContent        = o.payment?.transactionId || '—';
+    document.getElementById('dPayAt').textContent         = o.payment?.paidAt ? fmtDateFull(o.payment.paidAt) : '—';
+    document.getElementById('modalStatusSelect').value   = o.status || 'pending';
+
+    document.getElementById('detailModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+    document.body.style.overflow = '';
+    selectedOrderId = null;
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('detailModal')) closeDetailModal();
+  }
+
+  async function updateOrderStatus() {
+    if (!selectedOrderId) return;
+    const status = document.getElementById('modalStatusSelect').value;
+    const btn    = document.getElementById('updateStatusBtn');
+    btn.disabled = true;
+
+    const res = await fetch(`/api/admin/orders/${selectedOrderId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() },
+      body: JSON.stringify({ status })
+    });
+
+    btn.disabled = false;
+    if (!res.ok) { alert('আপডেট ব্যর্থ হয়েছে।'); return; }
+
+    const idx = allOrders.findIndex(o => o.id === selectedOrderId);
+    if (idx > -1) { allOrders[idx].status = status; updateStats(); renderTable(); }
+    closeDetailModal();
+  }
+
+  // ── utils ─────────────────────────────────────────────────────────────────
+
+  function payBadge(status) {
+    const map = { paid: 'badge-paid', pending: 'badge-pending', failed: 'badge-failed', cancelled: 'badge-cancelled' };
+    const cls = map[status] || 'badge-pending';
+    return `<span class="badge ${cls}">${cap(status || 'pending')}</span>`;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+  }
+
+  function fmtDateFull(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleString('en-BD', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function showLoading(show) {
+    document.getElementById('loadingOverlay').classList.toggle('show', show);
+  }
+
+  // ── init ──────────────────────────────────────────────────────────────────
+
+  const savedToken = sessionStorage.getItem(TOKEN_KEY);
+  if (savedToken) {
+    showDashboard();
+  }
+
+  // Refresh every 60 s while dashboard is open
+  setInterval(() => {
+    if (document.getElementById('dashboard').style.display !== 'none' && getToken()) {
+      loadOrders();
+    }
+  }, 60000);
+</script>
+</body>
+</html>

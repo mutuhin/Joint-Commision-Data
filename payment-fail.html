@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>পেমেন্ট ব্যর্থ — Dried Depot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --fg: #f4f2ed;
+      --muted: #8a8680;
+      --red: #c0392b;
+      --red-light: #e05a4b;
+      --accent: #e8a54b;
+      --line: rgba(244,242,237,0.12);
+      --green: #2d4a3e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Outfit", system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: #111113;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+    }
+    .icon {
+      width: 72px; height: 72px;
+      background: rgba(192,57,43,0.12);
+      border: 2px solid var(--red-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.75rem;
+      font-size: 2rem;
+      color: var(--red-light);
+    }
+    h1 {
+      font-family: "Noto Sans Bengali", system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--red-light);
+    }
+    .subtitle {
+      font-family: "Noto Sans Bengali", system-ui, sans-serif;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      font-family: "Outfit", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--green); color: #fff; }
+    .btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✕</div>
+    <h1 id="title">পেমেন্ট ব্যর্থ হয়েছে</h1>
+    <p class="subtitle" id="msg">পেমেন্ট প্রক্রিয়া সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা অন্য পেমেন্ট পদ্ধতি ব্যবহার করুন।</p>
+    <div class="actions">
+      <a href="index.html" class="btn btn-primary">আবার চেষ্টা করুন</a>
+      <a href="index.html" class="btn btn-outline">হোমে ফিরুন</a>
+    </div>
+  </div>
+  <script>
+    const reason = new URLSearchParams(location.search).get('reason');
+    if (reason === 'cancelled') {
+      document.getElementById('title').textContent = 'পেমেন্ট বাতিল করা হয়েছে';
+      document.getElementById('msg').textContent = 'আপনি পেমেন্ট বাতিল করেছেন। আবার অর্ডার করতে হোম পেজে যান।';
+    }
+  </script>
+</body>
+</html>

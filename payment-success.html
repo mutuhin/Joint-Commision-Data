@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>পেমেন্ট সফল — Dried Depot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --fg: #f4f2ed;
+      --muted: #8a8680;
+      --green: #2d4a3e;
+      --green-light: #4caf82;
+      --accent: #e8a54b;
+      --line: rgba(244,242,237,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Outfit", system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: #111113;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+    }
+    .icon {
+      width: 72px; height: 72px;
+      background: rgba(76,175,130,0.15);
+      border: 2px solid var(--green-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.75rem;
+      font-size: 2rem;
+      color: var(--green-light);
+    }
+    h1 {
+      font-family: "Noto Sans Bengali", system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--green-light);
+    }
+    .subtitle {
+      font-family: "Noto Sans Bengali", system-ui, sans-serif;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+    .order-id {
+      display: inline-block;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      background: rgba(232,165,75,0.08);
+      border: 1px solid rgba(232,165,75,0.2);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.06em;
+    }
+    .actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      font-family: "Outfit", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--green); color: #fff; }
+    .btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+    .note {
+      margin-top: 2rem;
+      font-family: "Noto Sans Bengali", system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✓</div>
+    <h1>পেমেন্ট সফল হয়েছে!</h1>
+    <p class="subtitle">আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে। শীঘ্রই আমরা আপনার সাথে যোগাযোগ করব।</p>
+    <div class="order-id" id="orderIdDisplay"></div>
+    <div class="actions">
+      <a href="index.html" class="btn btn-primary">হোমে ফিরুন</a>
+      <a href="blog.html" class="btn btn-outline">ব্লগ পড়ুন</a>
+    </div>
+    <p class="note">অর্ডার সংক্রান্ত যেকোনো সমস্যায় আমাদের মোবাইলে যোগাযোগ করুন।</p>
+  </div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const el = document.getElementById('orderIdDisplay');
+    if (id) {
+      el.textContent = 'অর্ডার নং: ' + id;
+    } else {
+      el.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
